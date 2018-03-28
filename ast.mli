@@ -1,5 +1,5 @@
 
-(* Arbres de syntaxe abstraite de Mini-Python *)
+(* Abstract syntax trees of Mini-Python *)
 
 type ident = string
 
@@ -16,8 +16,8 @@ type constant =
   | Cnone
   | Cbool of bool
   | Cstring of string
-  | Cint of int (* en Python les entiers sont en réalité de précision
-                   arbitraire; on simplifie ici *)
+  | Cint of int (* in Python the integers are in fact accurate
+                   arbitrary; we simplify here *)
 
 type expr =
   | Ecst of constant
@@ -41,4 +41,3 @@ and stmt =
 and def = ident * ident list * stmt
 
 and file = def list * stmt
-

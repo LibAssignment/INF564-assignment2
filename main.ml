@@ -1,5 +1,5 @@
 
-(* Programme principal *)
+(* Main program *)
 
 open Format
 open Lexing
@@ -53,6 +53,3 @@ let () =
     | e ->
 	eprintf "Anomaly: %s\n@." (Printexc.to_string e);
 	exit 2
-
-
-

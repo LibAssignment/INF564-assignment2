@@ -2,20 +2,20 @@
 open Ast
 open Format
 
-(* Exception levée pour signaler une erreur pendant l'interprétation *)
+(* Exception raised to report error during interpretation *)
 exception Error of string
 let error s = raise (Error s)
 
-(* Les valeurs de Mini-Python
+(* The values of Mini-Python
 
-   - une différence notable avec Python : on
-     utilise ici le type int alors que les entiers de Python sont de
-     précision arbitraire ; on pourrait utiliser le module Big_int d'OCaml
-     mais on choisit la facilité
-   - ce que Python appelle une liste est en réalité un tableau
-     redimensionnable ; dans le fragment considéré ici, il n'y a pas
-     de possibilité d'en modifier la longueur, donc un simple tableau OCaml
-     convient *)
+   - a noticeable difference with Python: we
+      here uses the int type while the Python integers are of
+      arbitrary precision; we could use OCaml's Big_int module
+      but we choose the facility
+   - what Python calls a list is actually a table
+      resizable; in the fragment considered here, there is no
+      possibility of changing the length, so a simple table OCaml
+      appropriate *)
 type value =
   | Vnone
   | Vbool of bool
@@ -23,7 +23,7 @@ type value =
   | Vstring of string
   | Vlist of value array
 
-(* Affichage d'une valeur sur la sortie standard *)
+(* Displaying a value on the standard output *)
 let rec print_value = function
   | Vnone -> printf "None"
   | Vbool true -> printf "True"
@@ -36,88 +36,88 @@ let rec print_value = function
     for i = 0 to n-1 do print_value a.(i); if i < n-1 then printf ", " done;
     printf "]"
 
-(* Interprétation booléenne d'une valeur
+(* Boolean interpretation of a value
 
-   En Python, toute valeur peut être utilisée comme un booléen : None,
-   la liste vide, la chaîne vide et l'entier 0 sont considérés comme
-   False et toute autre valeurs comme True *)
+   In Python, any value can be used as a Boolean: None,
+   the empty list, the empty string, and the integer 0 are considered
+   False and any other values like True *)
 
-let is_false v = assert false (* à compléter (question 2) *)
+let is_false v = assert false (* to complete (question 2) *)
 
-let is_true v = assert false (* à compléter (question 2) *)
+let is_true v = assert false (* to complete (question 2) *)
 
-(* Les fonctions sont ici uniquement globales *)
+(* The functions here are only global *)
 
 let functions = (Hashtbl.create 16 : (string, ident list * stmt) Hashtbl.t)
 
-(* L'instruction 'return' de Python est interprétée à l'aide d'une exception *)
+(* The 'return' statement of Python is interpreted using an exception *)
 
 exception Return of value
 
-(* Les variables locales (paramètres de fonctions et variables introduites
-   par des affectations) sont stockées dans une table de hachage passée en
-   arguments aux fonctions suivantes sous le nom 'ctx' *)
+(* Local variables (function parameters and variables introduced
+   assignments) are stored in a hash table passed in
+   arguments to the following functions under the name 'ctx' *)
 
 type ctx = (string, value) Hashtbl.t
 
-(* Interprétation d'une expression (renvoie une valeur) *)
+(* Interpreting an expression (return a value) *)
 
 let rec expr ctx = function
   | Ecst Cnone ->
       Vnone
   | Ecst (Cstring s) ->
       Vstring s
-  (* arithmétique *)
+  (* arithmetic *)
   | Ecst (Cint n) ->
-      assert false (* à compléter (question 1) *)
+      assert false (* to complete (question 1) *)
   | Ebinop (Badd | Bsub | Bmul | Bdiv | Bmod |
             Beq | Bneq | Blt | Ble | Bgt | Bge as op, e1, e2) ->
       let v1 = expr ctx e1 in
       let v2 = expr ctx e2 in
       begin match op, v1, v2 with
-        | Badd, Vint n1, Vint n2 -> assert false (* à compléter (question 1) *)
-        | Bsub, Vint n1, Vint n2 -> assert false (* à compléter (question 1) *)
-        | Bmul, Vint n1, Vint n2 -> assert false (* à compléter (question 1) *)
-        | Bdiv, Vint n1, Vint n2 -> assert false (* à compléter (question 1) *)
-        | Bmod, Vint n1, Vint n2 -> assert false (* à compléter (question 1) *)
-        | Beq, _, _  -> assert false (* à compléter (question 2) *)
-        | Bneq, _, _ -> assert false (* à compléter (question 2) *)
-        | Blt, _, _  -> assert false (* à compléter (question 2) *)
-        | Ble, _, _  -> assert false (* à compléter (question 2) *)
-        | Bgt, _, _  -> assert false (* à compléter (question 2) *)
-        | Bge, _, _  -> assert false (* à compléter (question 2) *)
+        | Badd, Vint n1, Vint n2 -> assert false (* to complete (question 1) *)
+        | Bsub, Vint n1, Vint n2 -> assert false (* to complete (question 1) *)
+        | Bmul, Vint n1, Vint n2 -> assert false (* to complete (question 1) *)
+        | Bdiv, Vint n1, Vint n2 -> assert false (* to complete (question 1) *)
+        | Bmod, Vint n1, Vint n2 -> assert false (* to complete (question 1) *)
+        | Beq, _, _  -> assert false (* to complete (question 2) *)
+        | Bneq, _, _ -> assert false (* to complete (question 2) *)
+        | Blt, _, _  -> assert false (* to complete (question 2) *)
+        | Ble, _, _  -> assert false (* to complete (question 2) *)
+        | Bgt, _, _  -> assert false (* to complete (question 2) *)
+        | Bge, _, _  -> assert false (* to complete (question 2) *)
         | Badd, Vstring s1, Vstring s2 ->
-            assert false (* à compléter (question 3) *)
+            assert false (* to complete (question 3) *)
         | Badd, Vlist l1, Vlist l2 ->
-            assert false (* à compléter (question 5) *)
+            assert false (* to complete (question 5) *)
         | _ -> error "unsupported operand types"
       end
   | Eunop (Uneg, e1) ->
-      assert false (* à compléter (question 1) *)
-  (* booléens *)
+      assert false (* to complete (question 1) *)
+  (* booleans *)
   | Ecst (Cbool b) ->
-      assert false (* à compléter (question 2) *)
+      assert false (* to complete (question 2) *)
   | Ebinop (Band, e1, e2) ->
-      assert false (* à compléter (question 2) *)
+      assert false (* to complete (question 2) *)
   | Ebinop (Bor, e1, e2) ->
-      assert false (* à compléter (question 2) *)
+      assert false (* to complete (question 2) *)
   | Eunop (Unot, e1) ->
-      assert false (* à compléter (question 2) *)
+      assert false (* to complete (question 2) *)
   | Eident id ->
-      assert false (* à compléter (question 3) *)
-  (* appel de fonction *)
+      assert false (* to complete (question 3) *)
+  (* function call *)
   | Ecall ("len", [e1]) ->
-      assert false (* à compléter (question 5) *)
+      assert false (* to complete (question 5) *)
   | Ecall ("list", [Ecall ("range", [e1])]) ->
-      assert false (* à compléter (question 5) *)
+      assert false (* to complete (question 5) *)
   | Ecall (f, el) ->
-      assert false (* à compléter (question 4) *)
+      assert false (* to complete (question 4) *)
   | Elist el ->
-      assert false (* à compléter (question 5) *)
+      assert false (* to complete (question 5) *)
   | Eget (e1, e2) ->
-      assert false (* à compléter (question 5) *)
+      assert false (* to complete (question 5) *)
 
-(* interprétation d'une instruction ; ne renvoie rien *)
+(* interpretation of an instruction; does not return anything *)
 
 and stmt ctx = function
   | Seval e ->
@@ -127,30 +127,27 @@ and stmt ctx = function
   | Sblock bl ->
       block ctx bl
   | Sif (e, s1, s2) ->
-      assert false (* à compléter (question 2) *)
+      assert false (* to complete (question 2) *)
   | Sassign (id, e1) ->
-      assert false (* à compléter (question 3) *)
+      assert false (* to complete (question 3) *)
   | Sreturn e ->
-      assert false (* à compléter (question 4) *)
+      assert false (* to complete (question 4) *)
   | Sfor (x, e, s) ->
-      assert false (* à compléter (question 5) *)
+      assert false (* to complete (question 5) *)
   | Sset (e1, e2, e3) ->
-      assert false (* à compléter (question 5) *)
+      assert false (* to complete (question 5) *)
 
-(* interprétation d'un bloc i.e. d'une séquence d'instructions *)
+(* interpretation of a block i.e. of a sequence of instructions *)
 
 and block ctx = function
   | [] -> ()
   | s :: sl -> stmt ctx s; block ctx sl
 
-(* interprétation d'un fichier
-   - dl est une liste de définitions de fonction (cf Ast.def)
-   - s est une instruction, qui représente les instructions globales
+(* interpretation of a file
+    - dl is a list of function definitions (see Ast.def)
+    - s is an instruction, which represents the global instructions
  *)
 
 let file (dl, s) =
-  (* à compléter (question 4) *)
+  (* to complete (question 4) *)
   stmt (Hashtbl.create 16) s
-
-
-

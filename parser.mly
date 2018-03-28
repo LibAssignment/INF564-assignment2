@@ -1,5 +1,5 @@
 
-/* Analyseur syntaxique pour Mini-Python */
+/* Parser for Mini-Python */
 
 %{
   open Ast
@@ -13,7 +13,7 @@
 %token LP RP LSQ RSQ COMMA EQUAL COLON BEGIN END NEWLINE
 %token PLUS MINUS TIMES DIV MOD
 
-/* Définitions des priorités et associativités des tokens */
+/* Priority definitions and associativity of tokens */
 
 %left OR
 %left AND
@@ -24,10 +24,10 @@
 %nonassoc unary_minus
 %nonassoc LSQ
 
-/* Point d'entrée de la grammaire */
+/* Point of entry of grammar */
 %start file
 
-/* Type des valeurs renvoyées par l'analyseur syntaxique */
+/* Type of values returned by the parser */
 %type <Ast.file> file
 
 %%
@@ -109,5 +109,3 @@ simple_stmt:
 ident:
   id = IDENT { id }
 ;
-
-

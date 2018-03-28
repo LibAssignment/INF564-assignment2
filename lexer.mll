@@ -1,5 +1,5 @@
 
-(* Analyseur lexical pour Mini-Python *)
+(* Lexical analyzer for Mini-Python *)
 
 {
   open Lexing
@@ -99,7 +99,7 @@ and string = parse
 {
 
   let next_token =
-    let tokens = Queue.create () in (* prochains lexèmes à renvoyer *)
+    let tokens = Queue.create () in (* next lexemes to send back *)
     fun lb ->
       if Queue.is_empty tokens then begin
 	let l = next_tokens lb in
@@ -107,6 +107,3 @@ and string = parse
       end;
       Queue.pop tokens
 }
-
-
-
