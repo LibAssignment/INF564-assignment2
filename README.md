@@ -1,8 +1,8 @@
 # INF564 - TD 2 - Mini-Python interpreter (in OCaml)
 
-The goal of this tutorial is to make an interpreter for a very simple piece of Python, called mini-Python ; it is not necessary to know the Python language.
+The goal of this tutorial is to make an interpreter for a very simple piece of Python, called **mini-Python**; it is not necessary to know the Python language.
 
-In order to help you build this interpreter, we provide you with its basic structure (in the form of a set of Caml files and a Makefile) that you can retrieve here: [mini-python.tar.gz](https://www.enseignement.polytechnique.fr/informatique/INF564/td/2-ocaml/mini-python.tar.gz) . Once this archive is unzipped with `tar zxvf mini-python.tar.gz` , you get a `mini-python/` directory containing the following files:
+In order to help you build this interpreter, we provide you with its basic structure (in the form of a set of OCaml files and a Makefile) that you can retrieve here: <s>[mini-python.tar.gz](https://www.enseignement.polytechnique.fr/informatique/INF564/td/2-ocaml/mini-python.tar.gz). Once this archive is unzipped with `tar zxvf mini-python.tar.gz`</s> run `git clone https://github.com/LibAssignment/INF564-assignment2 mini-python`, you will get a `mini-python/` directory containing the following files:
 
 filename   | description
 -----------|-----------------------------------------------
