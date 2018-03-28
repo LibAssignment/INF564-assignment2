@@ -1,4 +1,8 @@
 *.cmi
 *.cmo
 *.annot
+*.automaton
 mini-python
+
+parser.ml
+lexer.ml

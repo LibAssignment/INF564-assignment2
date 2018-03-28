@@ -38,6 +38,3 @@ clean:
 	ocamldep *.ml *.mli > .depend
 
 include .depend
-
-
-
