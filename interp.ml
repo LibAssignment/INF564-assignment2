@@ -96,7 +96,7 @@ let rec expr ctx = function
         | Badd, Vstring s1, Vstring s2 ->
             Vstring (s1^s2)
         | Badd, Vlist l1, Vlist l2 ->
-            assert false (* to complete (question 5) *)
+            Vlist (Array.append l1 l2)
         | _ -> error "unsupported operand types"
       end
   | Eunop (Uneg, e1) ->
@@ -118,9 +118,17 @@ let rec expr ctx = function
       Hashtbl.find ctx id
   (* function call *)
   | Ecall ("len", [e1]) ->
-      assert false (* to complete (question 5) *)
+      let v1 = expr ctx e1 in
+      begin match v1 with
+        | Vlist l -> Vint (Array.length l)
+        | _ -> error "unsupported operand types"
+      end
   | Ecall ("list", [Ecall ("range", [e1])]) ->
-      assert false (* to complete (question 5) *)
+      let v1 = expr ctx e1 in
+      begin match v1 with
+        | Vint i -> Vint i
+        | _ -> error "unsupported operand types"
+      end
   | Ecall (f, el) ->
       let (arg, body) = Hashtbl.find functions f in
       let f_ctx = Hashtbl.create 16 in
@@ -130,9 +138,14 @@ let rec expr ctx = function
         with Return (v) -> v
       end
   | Elist el ->
-      assert false (* to complete (question 5) *)
+      Vlist (List.map (fun e -> expr ctx e) el |> Array.of_list)
   | Eget (e1, e2) ->
-      assert false (* to complete (question 5) *)
+      let v1 = expr ctx e1 in
+      let v2 = expr ctx e2 in
+      begin match v1, v2 with
+        | Vlist l, Vint i -> Array.get l i
+        | _ -> error "unsupported operand types"
+      end
 
 (* interpretation of an instruction; does not return anything *)
 
@@ -153,9 +166,18 @@ and stmt ctx = function
   | Sreturn e ->
       return (expr ctx e)
   | Sfor (x, e, s) ->
-      assert false (* to complete (question 5) *)
+      let v = expr ctx e in
+      begin match v with
+        | Vlist l -> Array.iter (fun vv -> Hashtbl.add ctx x vv; stmt ctx s) l
+        | _ -> error "unsupported operand types"
+      end
   | Sset (e1, e2, e3) ->
-      assert false (* to complete (question 5) *)
+      let v1 = expr ctx e1 in
+      let v2 = expr ctx e2 in
+      begin match v1, v2 with
+        | Vlist l, Vint i -> Array.set l i (expr ctx e3)
+        | _ -> error "unsupported operand types"
+      end
 
 (* interpretation of a block i.e. of a sequence of instructions *)
 
