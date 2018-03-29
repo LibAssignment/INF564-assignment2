@@ -93,7 +93,7 @@ let rec expr ctx = function
         | Bgt, _, _  -> Vbool (v1 >  v2) (* to complete (question 6) *)
         | Bge, _, _  -> Vbool (v1 >= v2) (* to complete (question 6) *)
         | Badd, Vstring s1, Vstring s2 ->
-            assert false (* to complete (question 3) *)
+            Vstring (s1^s2)
         | Badd, Vlist l1, Vlist l2 ->
             assert false (* to complete (question 5) *)
         | _ -> error "unsupported operand types"
@@ -114,7 +114,7 @@ let rec expr ctx = function
   | Eunop (Unot, e1) ->
       Vbool (is_false (expr ctx e1))
   | Eident id ->
-      assert false (* to complete (question 3) *)
+      Hashtbl.find ctx id
   (* function call *)
   | Ecall ("len", [e1]) ->
       assert false (* to complete (question 5) *)
@@ -142,7 +142,7 @@ and stmt ctx = function
       else
         stmt ctx s2
   | Sassign (id, e1) ->
-      assert false (* to complete (question 3) *)
+      Hashtbl.add ctx id (expr ctx e1)
   | Sreturn e ->
       assert false (* to complete (question 4) *)
   | Sfor (x, e, s) ->

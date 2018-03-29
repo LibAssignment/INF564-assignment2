@@ -1,6 +1,7 @@
-print(not True and 1 // 0 == 0)
-print(1 < 2)
-if False or True:
-    print("ok")
-else:
-    print("oops")
+x = 41
+x = x + 1
+print(x)
+b = True and False
+print(b)
+s = "hello " + "world!"
+print(s)
