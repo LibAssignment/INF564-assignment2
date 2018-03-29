@@ -69,6 +69,25 @@ type ctx = (string, value) Hashtbl.t
 
 (* Interpreting an expression (return a value) *)
 
+let compare_value v1 v2 =
+  match v1, v2 with
+    | Vnone, Vnone -> 0
+    | Vbool b1, Vbool b2 -> compare b1 b2
+    | Vint i1, Vint i2 -> compare i1 i2
+    | Vstring s1, Vstring s2 -> compare s1 s2
+    | Vlist l1, Vlist l2 ->
+      let len1 = Array.length l1 in
+      let len2 = Array.length l2 in
+      let rec compare_vlist n =
+        if n == len1 || n == len2 then compare len1 len2
+        else begin
+          let t = compare (Array.get l1 n) (Array.get l2 n) in
+          if t != 0 then t
+          else compare_vlist (n+1)
+        end
+      in compare_vlist 0
+    | _ -> error "unsupported operand types for compare"
+
 let vlist_idx l i =
   let n = Array.length l in
   let check i =
@@ -99,12 +118,12 @@ let rec expr ctx = function
         | Bmul, Vint n1, Vint n2 -> Vint (n1*n2)
         | Bdiv, Vint n1, Vint n2 -> Vint (n1/n2)
         | Bmod, Vint n1, Vint n2 -> Vint (n1 mod n2)
-        | Beq, _, _  -> Vbool (v1 = v2)
-        | Bneq, _, _ -> Vbool (v1 != v2)
-        | Blt, _, _  -> Vbool (v1 <  v2) (* to complete (question 6) *)
-        | Ble, _, _  -> Vbool (v1 <= v2) (* to complete (question 6) *)
-        | Bgt, _, _  -> Vbool (v1 >  v2) (* to complete (question 6) *)
-        | Bge, _, _  -> Vbool (v1 >= v2) (* to complete (question 6) *)
+        | Beq, _, _  -> Vbool (compare_value v1 v2 = 0)
+        | Bneq, _, _ -> Vbool (compare_value v1 v2 != 0)
+        | Blt, _, _  -> Vbool (compare_value v1 v2 < 0)
+        | Ble, _, _  -> Vbool (compare_value v1 v2 <= 0)
+        | Bgt, _, _  -> Vbool (compare_value v1 v2 > 0)
+        | Bge, _, _  -> Vbool (compare_value v1 v2 >= 0)
         | Badd, Vstring s1, Vstring s2 ->
             Vstring (s1^s2)
         | Badd, Vlist l1, Vlist l2 ->
