@@ -69,17 +69,17 @@ let rec expr ctx = function
       Vstring s
   (* arithmetic *)
   | Ecst (Cint n) ->
-      assert false (* to complete (question 1) *)
+      Vint n
   | Ebinop (Badd | Bsub | Bmul | Bdiv | Bmod |
             Beq | Bneq | Blt | Ble | Bgt | Bge as op, e1, e2) ->
       let v1 = expr ctx e1 in
       let v2 = expr ctx e2 in
       begin match op, v1, v2 with
-        | Badd, Vint n1, Vint n2 -> assert false (* to complete (question 1) *)
-        | Bsub, Vint n1, Vint n2 -> assert false (* to complete (question 1) *)
-        | Bmul, Vint n1, Vint n2 -> assert false (* to complete (question 1) *)
-        | Bdiv, Vint n1, Vint n2 -> assert false (* to complete (question 1) *)
-        | Bmod, Vint n1, Vint n2 -> assert false (* to complete (question 1) *)
+        | Badd, Vint n1, Vint n2 -> Vint (n1+n2)
+        | Bsub, Vint n1, Vint n2 -> Vint (n1-n2)
+        | Bmul, Vint n1, Vint n2 -> Vint (n1*n2)
+        | Bdiv, Vint n1, Vint n2 -> Vint (n1/n2)
+        | Bmod, Vint n1, Vint n2 -> Vint (n1 mod n2)
         | Beq, _, _  -> assert false (* to complete (question 2) *)
         | Bneq, _, _ -> assert false (* to complete (question 2) *)
         | Blt, _, _  -> assert false (* to complete (question 2) *)
@@ -93,7 +93,11 @@ let rec expr ctx = function
         | _ -> error "unsupported operand types"
       end
   | Eunop (Uneg, e1) ->
-      assert false (* to complete (question 1) *)
+      let v1 = expr ctx e1 in
+      begin match v1 with
+        | Vint n1 -> Vint (-n1)
+        | _ -> error "unsupported operand types"
+      end
   (* booleans *)
   | Ecst (Cbool b) ->
       assert false (* to complete (question 2) *)
