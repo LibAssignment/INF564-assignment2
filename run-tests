@@ -3,7 +3,7 @@
 score=0
 max=0
 
-echo "Tests positifs (fichiers dans tests/good/)"
+echo "Positive tests (files in tests/good/)"
 
 for f in tests/good/*.py; do
     max=`expr $max + 1`;
@@ -11,30 +11,30 @@ for f in tests/good/*.py; do
     expected=tests/good/`basename $f .py`.out
     rm -f out
     if ./mini-python $f > out; then
-	if cmp --quiet out $expected; then
-	    score=`expr $score + 1`;
-	else
-	    echo "  ECHEC : mauvaise sortie pour $f"
-	fi
+      if cmp --quiet out $expected; then
+          score=`expr $score + 1`;
+      else
+          echo "  FAIL: bad result for $f"
+      fi
     else
-	echo "  ECHEC de l'interprétation pour $f"
+      echo "  FAIL: interpreting $f"
     fi
 done
 echo
 
-echo "Tests négatifs (fichiers dans tests/bad/)"
+echo "Negative tests (files in tests/bad/)"
 
 for f in tests/bad/*.py; do
     max=`expr $max + 1`;
     echo $f
     rm -f out
     if ./mini-python $f > out 2>&1; then
-	echo "  ECHEC : l'évaluation de $f devrait échouer"
+	echo "  FAIL: Evaluation of $f should fail"
     else
         if grep -q "^error:" out; then
 	    score=`expr $score + 1`;
         else
-            echo "  ECHEC : devrait afficher 'error'"
+            echo "  FAIL: should display 'error'"
         fi
     fi
 done

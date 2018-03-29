@@ -25,15 +25,15 @@ def fibaux(a, b, k):
     if k == 0:
         return a
     else:
-        return fibaux(b, a + b, k-1)
+        return fibaux(b, a+b, k-1)
 
 def fib(n):
     return fibaux(0, 1, n)
 
 # one or more statements at the end of the file
-print("some values ​​of the Fibonacci sequence:")
+print("some values of the Fibonacci sequence:")
 for n in [0, 1, 11, 42]:
-    print(fib (n))
+    print(fib(n))
 ```
 
 More generally, a **mini-Python** file is composed of an optional list of function declarations, followed by a list of instructions. The instructions are: assignment, conditional, loop (`for`), displaying an expression with `print` , returns a value with `return` or evaluation of an expression. Integer expressions are: a constant (boolean, integer or string of characters), access to a variable, the construction of a list (with notation `[e1, e2, ..., en]` ), access to a list item (with the notation `e[i]` ), the call of a function, or one of the operations `+`, `-`, `*`, also `//`, `==`, `<>`, `<`, `<=`, `>`, `>=`, `and`, `or` and `not`.
@@ -68,7 +68,7 @@ Finally, complete the function `stmt` to interpret the conditional (construction
 Test on the following program:
 ```python
 print(not True and 1 // 0 == 0)
-print(1 <2)
+print(1 < 2)
 if False or True:
     print("ok")
 else:
@@ -98,7 +98,7 @@ x = x + 1
 print(x)
 b = True and False
 print(b)
-s = "hello" + "world!"
+s = "hello " + "world!"
 print(s)
 ```
 whose result must be
@@ -111,7 +111,7 @@ hello world!
 ## Question 4. Functions
 We will now add the processing of the functions. These are stored in the global table thus declared:
 ```ocaml
-let functions = (Hashtbl.create 17: (string, ident list * stmt) Hashtbl.t)
+let functions = (Hashtbl.create 16: (string, ident list * stmt) Hashtbl.t)
 ```
 
 Each function name is associated with a pair consisting of the list of parameters of the function and the instruction that constitutes the body of the function. Complete the `file` function to fill this table with the functions contained in the list `fl`.
@@ -120,11 +120,11 @@ Then complete the functions `expr` and `stmt` to interpret a function call. For 
 
 Test on the following program:
 ```python
-def fact (n):
+def fact(n):
     if n <= 1: return 1
-    return n * fact (n-1)
+    return n * fact(n-1)
 
-print (fact (10))
+print(fact(10))
 ```
 whose result must be
 ```

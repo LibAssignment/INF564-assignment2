@@ -15,7 +15,7 @@ mini-python: $(CMO)
 .SUFFIXES: .mli .ml .cmi .cmo .mll .mly
 
 .mli.cmi:
-	ocamlc $(FLAGS) -c  $<
+	ocamlc $(FLAGS) -c $<
 
 .ml.cmo:
 	ocamlc $(FLAGS) -c $<

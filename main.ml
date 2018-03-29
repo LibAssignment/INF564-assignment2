@@ -40,16 +40,16 @@ let () =
     Interp.file f
   with
     | Lexer.Lexing_error s ->
-	report (lexeme_start_p lb, lexeme_end_p lb);
-	eprintf "lexical error: %s@." s;
-	exit 1
+        report (lexeme_start_p lb, lexeme_end_p lb);
+        eprintf "lexical error: %s@." s;
+        exit 1
     | Parser.Error ->
-	report (lexeme_start_p lb, lexeme_end_p lb);
-	eprintf "syntax error@.";
-	exit 1
+        report (lexeme_start_p lb, lexeme_end_p lb);
+        eprintf "syntax error@.";
+        exit 1
     | Interp.Error s ->
-	eprintf "error: %s@." s;
-	exit 1
+        eprintf "error: %s@." s;
+        exit 1
     | e ->
-	eprintf "Anomaly: %s\n@." (Printexc.to_string e);
-	exit 2
+        eprintf "Anomaly: %s\n@." (Printexc.to_string e);
+        exit 2
