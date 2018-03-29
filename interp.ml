@@ -69,6 +69,18 @@ type ctx = (string, value) Hashtbl.t
 
 (* Interpreting an expression (return a value) *)
 
+let vlist_idx l i =
+  let n = Array.length l in
+  let check i =
+    if i < 0 || i >= n then
+      error "list index out of range"
+    else
+      i
+  in if i < 0 then
+    check (n+i)
+  else
+    check i
+
 let rec expr ctx = function
   | Ecst Cnone ->
       Vnone
@@ -97,13 +109,13 @@ let rec expr ctx = function
             Vstring (s1^s2)
         | Badd, Vlist l1, Vlist l2 ->
             Vlist (Array.append l1 l2)
-        | _ -> error "unsupported operand types"
+        | _ -> error "unsupported operand types for binop"
       end
   | Eunop (Uneg, e1) ->
       let v1 = expr ctx e1 in
       begin match v1 with
         | Vint n1 -> Vint (-n1)
-        | _ -> error "unsupported operand types"
+        | _ -> error "unsupported operand types for -i"
       end
   (* booleans *)
   | Ecst (Cbool b) ->
@@ -121,13 +133,16 @@ let rec expr ctx = function
       let v1 = expr ctx e1 in
       begin match v1 with
         | Vlist l -> Vint (Array.length l)
-        | _ -> error "unsupported operand types"
+        | _ -> error "unsupported operand types for len()"
       end
   | Ecall ("list", [Ecall ("range", [e1])]) ->
       let v1 = expr ctx e1 in
       begin match v1 with
-        | Vint i -> Vint i
-        | _ -> error "unsupported operand types"
+        | Vint i ->
+            let rec range n acc =
+              if n == 0 then acc else range (n-1) (Vint (n-1) :: acc) in
+            Vlist (range i [] |> Array.of_list)
+        | _ -> error "unsupported operand types for len(range())"
       end
   | Ecall (f, el) ->
       let (arg, body) = Hashtbl.find functions f in
@@ -143,8 +158,8 @@ let rec expr ctx = function
       let v1 = expr ctx e1 in
       let v2 = expr ctx e2 in
       begin match v1, v2 with
-        | Vlist l, Vint i -> Array.get l i
-        | _ -> error "unsupported operand types"
+        | Vlist l, Vint i -> Array.get l (vlist_idx l i)
+        | _ -> error "unsupported operand types for l[i]"
       end
 
 (* interpretation of an instruction; does not return anything *)
@@ -169,14 +184,14 @@ and stmt ctx = function
       let v = expr ctx e in
       begin match v with
         | Vlist l -> Array.iter (fun vv -> Hashtbl.add ctx x vv; stmt ctx s) l
-        | _ -> error "unsupported operand types"
+        | _ -> error "unsupported operand types for loop"
       end
   | Sset (e1, e2, e3) ->
       let v1 = expr ctx e1 in
       let v2 = expr ctx e2 in
       begin match v1, v2 with
-        | Vlist l, Vint i -> Array.set l i (expr ctx e3)
-        | _ -> error "unsupported operand types"
+        | Vlist l, Vint i -> Array.set l (vlist_idx l i) (expr ctx e3)
+        | _ -> error "unsupported operand types for l[i]="
       end
 
 (* interpretation of a block i.e. of a sequence of instructions *)
