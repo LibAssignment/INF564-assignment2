@@ -59,6 +59,7 @@ let functions = (Hashtbl.create 16 : (string, ident list * stmt) Hashtbl.t)
 (* The 'return' statement of Python is interpreted using an exception *)
 
 exception Return of value
+let return s = raise (Return s)
 
 (* Local variables (function parameters and variables introduced
    assignments) are stored in a hash table passed in
@@ -121,7 +122,13 @@ let rec expr ctx = function
   | Ecall ("list", [Ecall ("range", [e1])]) ->
       assert false (* to complete (question 5) *)
   | Ecall (f, el) ->
-      assert false (* to complete (question 4) *)
+      let (arg, body) = Hashtbl.find functions f in
+      let f_ctx = Hashtbl.create 16 in
+      begin
+        List.iter2 (fun id e -> Hashtbl.add f_ctx id (expr ctx e)) arg el;
+        try begin stmt f_ctx body; Vnone end
+        with Return (v) -> v
+      end
   | Elist el ->
       assert false (* to complete (question 5) *)
   | Eget (e1, e2) ->
@@ -144,7 +151,7 @@ and stmt ctx = function
   | Sassign (id, e1) ->
       Hashtbl.add ctx id (expr ctx e1)
   | Sreturn e ->
-      assert false (* to complete (question 4) *)
+      return (expr ctx e)
   | Sfor (x, e, s) ->
       assert false (* to complete (question 5) *)
   | Sset (e1, e2, e3) ->
@@ -162,5 +169,5 @@ and block ctx = function
  *)
 
 let file (dl, s) =
-  (* to complete (question 4) *)
+  List.iter (fun (id, arg, body) -> Hashtbl.add functions id (arg, body)) dl;
   stmt (Hashtbl.create 16) s
